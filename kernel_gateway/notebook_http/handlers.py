@@ -77,6 +77,21 @@ class NotebookAPIHandler(TokenAuthorizationMixin,
         """
         if result_accumulator['error']:
             future.set_exception(CodeExecutionError(result_accumulator['error']))
+        elif len(result_accumulator['display']) > 0:
+          out = []
+          for result in result_accumulator['display']:
+            if 'image/png' in result:
+              out.append(
+                  '<img alt="%s" src="data:image/png;base64,%s" />'
+                  % (result.get('text/plain', ''), result['image/png'])
+              )
+              continue
+            if 'text/html' in result:
+              out.append(result['text/html'])
+            if 'text/plain' in result:
+              out.append(result['text/plain'])
+          future.set_result('\n'.join(out))
+
         elif len(result_accumulator['stream']) > 0:
             future.set_result(''.join(result_accumulator['stream']))
         elif result_accumulator['result']:
@@ -113,6 +128,9 @@ class NotebookAPIHandler(TokenAuthorizationMixin,
             # Store the execute result
             elif msg['header']['msg_type'] == 'execute_result':
                 result_accumulator['result'] = msg['content']['data']
+            # Accumulate display data
+            elif msg['header']['msg_type'] == 'display_data':
+              result_accumulator['display'].append(msg['content']['data'])
             # Accumulate the stream messages
             elif msg['header']['msg_type'] == 'stream':
                 # Only take stream output if it is on stdout or if the kernel
@@ -152,7 +170,13 @@ class NotebookAPIHandler(TokenAuthorizationMixin,
             If the kernel returns any error
         """
         future = Future()
-        result_accumulator = {'stream' : [], 'error' : None, 'result' : None}
+
+        result_accumulator = {
+          'display': [],
+          'stream': [],
+          'error': None,
+          'result': None,
+        }
         parent_header = kernel_client.execute(source_code)
         on_recv_func = partial(self.on_recv, result_accumulator, future, parent_header)
         self.kernel_pool.on_recv(kernel_id, on_recv_func)
