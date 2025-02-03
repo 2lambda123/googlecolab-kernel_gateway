@@ -104,7 +104,7 @@ See `git log` for a more detailed summary of changes.
 ### 1.0.0 (2016-07-15)
 
 - Introduce an [API for developing mode plug-ins](https://jupyter-kernel-gateway.readthedocs.io/en/latest/plug-in.html)
-- Separate `jupyter-websocket` and `notebook-http` modes into  plug-in packages
+- Separate `jupyter-websocket` and `notebook-http` modes into plug-in packages
 - Move mode specific command line options into their respective packages (see `--help-all`)
 - Report times with respect to UTC in `/_api/activity` responses
 

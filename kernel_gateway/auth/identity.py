@@ -5,6 +5,7 @@
 This defines the _authentication_ layer of Jupyter Server,
 to be used in combination with Authorizer for _authorization_.
 """
+
 from jupyter_server.auth.identity import IdentityProvider, User
 from jupyter_server.base.handlers import JupyterHandler
 from tornado import web
