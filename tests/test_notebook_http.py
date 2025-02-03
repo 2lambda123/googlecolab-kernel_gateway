@@ -64,9 +64,9 @@ class TestDefaults:
 
         response = await jp_fetch("message", method="GET")
         assert response.code == 200, "GET endpoint did not return 200."
-        assert (
-            response.body == b"hola {}\n"
-        ), "Unexpected body in response to GET after performing PUT."
+        assert response.body == b"hola {}\n", (
+            "Unexpected body in response to GET after performing PUT."
+        )
 
     async def test_api_post_endpoint(self, jp_fetch):
         """POST endpoint should be callable"""
@@ -91,9 +91,9 @@ class TestDefaults:
         )
         response = await jp_fetch("people", "2", method="DELETE")
         assert response.code == 200, "DELETE endpoint did not return 200."
-        assert (
-            response.body == b'["Rick", "Maggie", "Carol", "Daryl"]\n'
-        ), "Unexpected body in response to DELETE."
+        assert response.body == b'["Rick", "Maggie", "Carol", "Daryl"]\n', (
+            "Unexpected body in response to DELETE."
+        )
 
     async def test_api_error_endpoint(self, jp_fetch):
         """Error in a cell should cause 500 HTTP status"""
@@ -110,18 +110,18 @@ class TestDefaults:
         """Endpoints which do no support an HTTP verb should respond with 405."""
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch("message", method="DELETE")
-        assert (
-            e.value.code == 405
-        ), "Endpoint which exists, but does not support DELETE, did not return 405 status code."
+        assert e.value.code == 405, (
+            "Endpoint which exists, but does not support DELETE, did not return 405 status code."
+        )
 
     async def test_api_undefined(self, jp_fetch):
         """Endpoints which are not registered at all should respond with 404."""
         with pytest.raises(HTTPClientError) as e:
             await jp_fetch("not", "an", "endpoint", method="GET")
 
-        assert (
-            e.value.code == 404
-        ), "Endpoint which should not exist did not return 404 status code."
+        assert e.value.code == 404, (
+            "Endpoint which should not exist did not return 404 status code."
+        )
         body = json.loads(e.value.response.body.decode("UTF-8"))
         assert body["reason"] == "Not Found"
 
@@ -133,9 +133,9 @@ class TestDefaults:
                 "content-type", method="GET", headers={"Content-Type": content_type}
             )
             assert response.code == 200, "GET endpoint did not return 200."
-            assert (
-                response.body.decode(encoding="UTF-8") == f"{content_type}\n"
-            ), "Unexpected value in response"
+            assert response.body.decode(encoding="UTF-8") == f"{content_type}\n", (
+                "Unexpected value in response"
+            )
 
     async def test_format_request_code_escaped_integration(self, jp_fetch):
         """Quotes should be properly escaped in request headers."""
@@ -222,9 +222,9 @@ class TestCustomResponse:
         response = await jp_fetch("json", method="GET")
         result = json.loads(response.body.decode("UTF-8"))
         assert response.code == 200, "Response status was not 200"
-        assert (
-            response.headers["Content-Type"] == "application/json"
-        ), "Incorrect mime type was set on response"
+        assert response.headers["Content-Type"] == "application/json", (
+            "Incorrect mime type was set on response"
+        )
         assert result == {"hello": "world"}, "Incorrect response value."
 
     async def test_setting_response_status_code(self, jp_fetch, jp_argv):
@@ -238,9 +238,9 @@ class TestCustomResponse:
         response = await jp_fetch("etag", method="GET")
         result = json.loads(response.body.decode("UTF-8"))
         assert response.code == 200, "Response status was not 200"
-        assert (
-            response.headers["Content-Type"] == "application/json"
-        ), "Incorrect mime type was set on response"
+        assert response.headers["Content-Type"] == "application/json", (
+            "Incorrect mime type was set on response"
+        )
         assert result, {"hello": "world"} == "Incorrect response value."
         assert response.headers["Etag"] == "1234567890", "Incorrect Etag header value."
 
@@ -256,13 +256,13 @@ class TestKernelPool:
             response = await jp_fetch("message", method="GET")
 
             if i != 2:
-                assert (
-                    response.body == b"hello {}\n"
-                ), "Unexpected body in response to GET after performing PUT."
+                assert response.body == b"hello {}\n", (
+                    "Unexpected body in response to GET after performing PUT."
+                )
             else:
-                assert (
-                    response.body == b"hola {}\n"
-                ), "Unexpected body in response to GET after performing PUT."
+                assert response.body == b"hola {}\n", (
+                    "Unexpected body in response to GET after performing PUT."
+                )
 
     @pytest.mark.timeout(20)
     async def test_concurrent_request_should_not_be_blocked(self, jp_fetch, jp_argv):
@@ -271,9 +271,9 @@ class TestKernelPool:
         assert response_long_running.done() is False, "Long HTTP Request is not running"
 
         response_short_running = await jp_fetch("sleep", "3", method="GET")
-        assert (
-            response_short_running.code == 200
-        ), "Short HTTP Request did not return proper status code of 200"
+        assert response_short_running.code == 200, (
+            "Short HTTP Request did not return proper status code of 200"
+        )
         assert response_long_running.done() is False, "Long HTTP Request is not running"
         while not response_long_running.done():
             await asyncio.sleep(0.3)  # let the long request complete
@@ -318,9 +318,9 @@ class TestSwaggerSpec:
         result = json.loads(response.body.decode("UTF-8"))
         assert response.code == 200, "Swagger spec endpoint did not return the correct status code"
         assert result == expected_response, "Swagger spec endpoint did not return the correct value"
-        assert (
-            SwaggerSpecHandler.output is not None
-        ), "Swagger spec output wasn't cached for later requests"
+        assert SwaggerSpecHandler.output is not None, (
+            "Swagger spec output wasn't cached for later requests"
+        )
 
 
 @pytest.mark.parametrize(

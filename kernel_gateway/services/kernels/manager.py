@@ -1,6 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 """Kernel manager that optionally seeds kernel memory."""
+
 import os
 from typing import List, Optional
 

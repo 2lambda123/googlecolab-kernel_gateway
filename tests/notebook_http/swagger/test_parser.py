@@ -92,9 +92,9 @@ class TestSwaggerAPICellParser:
         try:
             for index in range(len(expected_values)):
                 endpoint, _ = endpoints[index]
-                assert (
-                    expected_values[index] == endpoint
-                ), "Endpoint was not found in expected order"
+                assert expected_values[index] == endpoint, (
+                    "Endpoint was not found in expected order"
+                )
         except IndexError:
             raise RuntimeError(endpoints) from None
 
@@ -144,12 +144,12 @@ class TestSwaggerAPICellParser:
         assert verb.lower() == "post", "Endpoint was not extracted correctly"
 
         endpoint, verb = parser.get_cell_endpoint_and_verb("some regular code")
-        assert (
-            endpoint is None
-        ), "Endpoint was not extracted correctly (something was actually returned)"
-        assert (
-            verb is None
-        ), "Endpoint was not extracted correctly (something was actually returned)"
+        assert endpoint is None, (
+            "Endpoint was not extracted correctly (something was actually returned)"
+        )
+        assert verb is None, (
+            "Endpoint was not extracted correctly (something was actually returned)"
+        )
 
     def test_endpoint_concatenation(self):
         """Parser should concatenate multiple cells with the same verb+path."""

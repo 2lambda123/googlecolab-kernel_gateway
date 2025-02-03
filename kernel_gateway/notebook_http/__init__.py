@@ -121,9 +121,7 @@ class NotebookHTTPPersonality(LoggingConfigurable):
             parameterized_path = parameterize_path(endpoint_path)
             parameterized_path = url_path_join("/", self.parent.base_url, parameterized_path)
             self.log.info(
-                "Registering resource: {}, methods: ({})".format(
-                    parameterized_path, list(verb_source_map.keys())
-                )
+                f"Registering resource: {parameterized_path}, methods: ({list(verb_source_map.keys())})"
             )
             response_source_map = (
                 response_sources[endpoint_path] if endpoint_path in response_sources else {}

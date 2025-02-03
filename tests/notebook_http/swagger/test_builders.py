@@ -80,9 +80,9 @@ class TestSwaggerBuilders:
         ), "description was not preserved"
         assert "info" in result, "info was not preserved"
         assert "title" in result["info"], "title was not present"
-        assert (
-            result["info"]["title"] == json.loads(expected)["info"]["title"]
-        ), "title was not preserved"
+        assert result["info"]["title"] == json.loads(expected)["info"]["title"], (
+            "title was not preserved"
+        )
         assert json.dumps(result["paths"]["/some/resource"], sort_keys=True) == json.dumps(
             json.loads(expected)["paths"]["/some/resource"], sort_keys=True
         ), "operations were not as expected"
